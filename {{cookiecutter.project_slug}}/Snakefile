@@ -1,0 +1,23 @@
+configfile:
+    "snakeconfig.yml"
+
+screen, = glob_wildcards(config["count_file"])
+
+rule all:
+    input:
+         expand("data/processed/concensusGLM-output/{screen}-concensus-data.rds", screen=screen)
+
+
+rule infer:
+    input:
+        counts=config["count_file"],
+        annotations="data/raw/annotations/plate-record.csv"
+    output:
+        "data/processed/concensusGLM-output/{screen}-concensus-data.rds"
+    params:
+        neg=config["controls"]["negative"],
+        pos=config["controls"]["positive"]
+    log:
+	   "logs/snakemake/concensusGLM/{screen}.log"
+    shell:
+        "Rscript src/data/concensusGLM.R --data {input.counts} --neg {params.neg} --meta {input.annotations} --pos {params.pos}"

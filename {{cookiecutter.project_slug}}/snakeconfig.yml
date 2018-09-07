@@ -1,0 +1,5 @@
+count_file: data/interim/{screen}.csv
+
+controls:
+  negative: untreated
+  positive: BRD-K01507359
